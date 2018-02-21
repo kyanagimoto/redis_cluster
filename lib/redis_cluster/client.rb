@@ -13,7 +13,7 @@ module RedisCluster
       # force_cluster defaults to true to match the client's behavior before
       # the option existed
       @force_cluster = configs.delete(:force_cluster) { |_key| true }
-
+      
       # The number of times to retry a failed execute. Redis errors, `MOVE`, or
       # `ASK` are all considered failures that will count towards this tally. A
       # count of at least 2 is probably sensible because if a node disappears
@@ -91,11 +91,11 @@ module RedisCluster
     # is used, but if the `use_initial_hosts` is set to `true`, then the client
     # is completely refreshed and the hosts that were specified when creating
     # it originally are set instead.
-    def reconnect(:use_initial_hosts => false)
+    def reconnect(use_initial_hosts = false)
       @hosts = @initial_hosts.dup if use_initial_hosts
 
       @mutex.synchronize do
-        @pool.nodes.each{|node| node.connection.close}
+        @pool.nodes.each { |node| node.connection.close }
         @pool.nodes.clear
         reload_pool_nodes_unsync(true)
       end
